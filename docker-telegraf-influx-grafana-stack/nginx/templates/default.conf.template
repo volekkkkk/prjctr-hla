@@ -1,0 +1,47 @@
+# this is required to proxy Grafana Live WebSocket connections.
+map $http_upgrade $connection_upgrade {
+    default upgrade;
+    '' close;
+}
+
+upstream app {
+    server ${APP_SERVER};
+}
+
+upstream grafana {
+    server ${GRAFANA_SERVER};
+}
+   
+upstream mongo {
+    server ${ME_SERVER};
+}
+
+
+server {
+    listen ${NGINX_PORT};
+
+    location / {
+        proxy_pass http://app;
+    }
+
+    location /grafana/ {
+        rewrite  ^/grafana/(.*) /$1 break;
+        proxy_set_header Host $http_host; 
+        proxy_pass http://grafana;
+    }
+
+    # Proxy Grafana Live WebSocket connections.
+    location /grafana/api/live/ {
+        rewrite  ^/grafana/(.*) /$1 break;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+        proxy_set_header Host $http_host;
+        proxy_pass http://grafana;
+    }
+
+    location /mongo {
+        rewrite  ^/mongo/(.*) /$1 break;
+        proxy_pass http://mongo;
+    }
+}
