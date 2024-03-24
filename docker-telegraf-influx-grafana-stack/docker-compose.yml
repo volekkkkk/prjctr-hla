@@ -14,8 +14,11 @@ services:
     ports:
       - 8080:8080
 
-#  elasticsearch:
-#    image: elasticsearch:8.12.2
+  elasticsearch:
+    image: elasticsearch:8.12.2
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
 
   mongo:
     image: mongo
@@ -36,7 +39,7 @@ services:
       - ./app:/src
     depends_on:
       - mongo
-#      - elasticsearch
+      - elasticsearch
 
   telegraf:
     image: telegraf:1.18-alpine
