@@ -1,0 +1,23 @@
+version: '3.6'
+services:
+  mongo:
+    image: mongo
+    env_file: configuration.env
+
+  mongo-express:
+    image: mongo-express
+    env_file: configuration.env
+    ports:
+      - 8081:8081
+
+  app:
+    build:
+      context: app
+    stop_signal: SIGINT
+    env_file: configuration.env
+    ports:
+      - 9090:9090
+    volumes:
+      - ./app:/src
+    depends_on:
+      - mongo
