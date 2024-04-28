@@ -1,0 +1,31 @@
+version: '3.6'
+
+services:
+
+  percona:
+    build:
+      context: percona
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: secretpwd
+    volumes:
+      - percona_data:/var/lib/mysql
+
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=postgres_password_test
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  percona_data:
+  postgres_data:
+
