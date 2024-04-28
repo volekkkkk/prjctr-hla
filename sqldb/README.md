@@ -9,10 +9,12 @@
 Hash index note - https://dev.mysql.com/doc/refman/8.0/en/innodb-adaptive-hash.html
 
 ### INSERT speed with different innodb_flush_log_at_trx_commit value
-#### JMeter configuration
-Number of threads (users): 250
-Ramp-up period (seconds): 5
-Duration (seconds): 60
+
+| JMeter Configuration          | Value |
+|-------------------------------|-------|
+| Number of threads (users)     | 250   |
+| Ramp-up period (seconds)      | 5     |
+| Duration (seconds)            | 60    |
 
 | innodb_flush_log_at_trx_commit | Rows inserted |
 |:------------------------------:|:-------------:|
