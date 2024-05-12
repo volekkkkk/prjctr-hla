@@ -1,0 +1,17 @@
+services:
+  redis-master:
+    image: redis:7.2
+    ports:
+      - 6379:6379
+    command: redis-server /usr/local/etc/redis/redis.conf 
+    volumes:
+      - ./conf/redis.conf:/usr/local/etc/redis/redis.conf
+
+  redis-slave:
+    image: redis:7.2
+    ports:
+      - 6380:6379
+    command: redis-server --slaveof redis-master 6379
+    depends_on:
+      - redis-master
+
