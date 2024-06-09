@@ -1,0 +1,39 @@
+services:
+  redis-rdb:
+    image: redis:7.2
+    volumes:
+      - redis-rdb-data:/data
+    
+  redis-aof:
+    image: redis:7.2
+    command: redis-server /usr/local/etc/redis/redis.conf 
+    volumes:
+      - ./conf/redis-aof.conf:/usr/local/etc/redis/redis.conf
+      - redis-aof-data:/data
+
+  beanstalkd:
+    image: schickling/beanstalkd
+    command: -b /var/lib/beanstalkd
+    ports:
+      - 11300:11300
+    volumes: 
+      - beancstalkd-data:/var/lib/beanstalkd
+
+  beanstalkd_console:
+    image: ohmcoe/beanstalk_console
+    depends_on:
+      - beanstalkd
+    ports:
+      - 8000:8000
+    environment:
+      - APACHE_PORT=8000
+      - BEANSTALKD_HOST=beanstalkd
+      - BEANSTALKD_PORT=11300
+
+volumes:
+  beancstalkd-data:
+    driver: local
+  redis-rdb-data:
+    driver: local
+  redis-aof-data:
+    driver: local
